@@ -15,7 +15,7 @@
 # Features
 The game has a few features.
 
-- Progress saving 
+- progress saving 
 
 - key press detection
 
