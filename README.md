@@ -24,14 +24,11 @@ The game has a few features.
 - menu
 
 # Controls/Rules
-The controls in the game are very simple - to start the game, just hold down the enter key for a short while.
-Once the game has started, you can buy investments using the numbers on the keyboard from 1 to 9, and 0 represents the number 10. 
-Pressing the esc key exits the game saves your progress. 
-To win the game, you must have 300 billion $ and click 'E'.
+The controls in the game are very simple - to start the game,click the enter key. Once the game has started, you can buy investments using the numbers on the keyboard from 1 to 9, and 0 represents the number 10. Pressing the esc key exits the game saves your progress. To win the game, you must have 300 billion $ and click 'E'.
 
 # Premade binaries
 - [Widnows](https://github.com/dam2452/ConsoleCapitalist/releases/download/v1.1.0/ConsoleCapitalistWindowsz-1.1.0.zip)
 
-- Linux TODO 
+- Linux
 
 - Mac Unfortunately, I don't have a computer with macOS 
