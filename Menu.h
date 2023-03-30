@@ -1,7 +1,3 @@
-//
-// Created by zodia on 27.03.2023.
-//
-
 #ifndef CC2_MENU_H
 #define CC2_MENU_H
 
@@ -14,36 +10,39 @@
 
 class Menu {
 public:
-    explicit Menu(const std::vector<std::pair<std::string, std::function<void()>>>& menuPos = {}, unsigned short menuCurrent = 0,
+    explicit Menu(const std::vector<std::pair<std::string, std::function<void()>>> &menuPos = {},
+                  unsigned short menuCurrent = 0,
                   unsigned short menuLast = 0);
 
     ~Menu();
 
+    //menu show
     void showMenu();
 
     void hideMenu();
-    void turnOffKeyDetect();
-    void turnOnKeyDetect();
-    void menuChoose();
 
     void menuDraw();
 
+    //key detection
+    void turnOffKeyDetect();
+
+    void turnOnKeyDetect();
+
+    //menu control
     void menuUp();
 
     void menuDown();
 
-    void detectKey();
-
-
-
-    void toggleMenuPtr(unsigned short pos, bool ptr);
+    void menuChoose();
 
 private:
-    void menuSelect();
-    bool menuActive=true;
+    void toggleMenuPtr(unsigned short pos, bool ptr);
 
-    std::mutex mtx;
-    std::condition_variable cv;
+    void detectKey();
+
+    void menuSelect();
+
+    bool menuActive = true;
     bool keyDetectionEnabled = true;
 
     unsigned short menuPosCount;
@@ -51,8 +50,7 @@ private:
     unsigned short menuCurrent;
     unsigned short menuPrevious;
     std::jthread keyThread;
-    std::atomic <int> key;
+    std::atomic<int> key;
 };
-
 
 #endif //CC2_MENU_H

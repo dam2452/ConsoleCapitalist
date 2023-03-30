@@ -1,21 +1,14 @@
-//
-// Created by zodia on 27.03.2023.
-//
-
 #include <iostream>
 #include <iomanip>
 #include "Menu.h"
 #include <stdexcept>
 
-
-#include <condition_variable>
-#include <mutex>
-
-
 #ifdef _WIN32
 #define CLEAR "cls"
+
 #include <conio.h>
 #include <windows.h>
+
 #else
 #define CLEAR "clear"
 
@@ -43,48 +36,26 @@ static char getch(){
 }
 #endif
 
+Menu::Menu(const std::vector<std::pair<std::string, std::function<void()>>> &menuPos, unsigned short menuCurrent,
+           unsigned short menuLast) : menuPos(menuPos), menuCurrent(menuCurrent), menuPrevious(menuLast) {
+    menuPosCount = menuPos.size();
+    if (menuCurrent > menuPosCount)
+        throw std::invalid_argument("menuCurrent > menuPosCount");
 
-void Menu::menuDraw() {
-    if(menuActive) {
-#ifdef _WIN32
-        COORD pos = {0, 0};
-        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-#else
-        std::cout << "\033[2J\033[1;1H";
-#endif
+    if (menuCurrent < 0)
+        throw std::invalid_argument("menuCurrent < 0");
 
-        std::cout << std::string(50,'-') << std::endl;
-        for (size_t i = 0; i < menuPosCount; i++) {
-            std::cout << std::setw(30)<< menuPos[i].first << std::endl;
-        }
-        std::cout << std::string(50,'-') << std::endl;
-        std::cout << std::setw(0)<< "CONTROLS: (arrow up/down) - move | (enter) - choose" << std::endl;
-        std::cout.flush();
-    }
+    if (menuPrevious > menuPosCount)
+        throw std::invalid_argument("menuLast > menuPosCount");
+    menuSelect();
+
+
+    keyThread = std::jthread{[&]() { detectKey(); }};
 }
 
-void Menu::menuUp() {
-    if (menuCurrent == 0) {
-        menuPrevious = menuCurrent;
-        menuCurrent = menuPosCount - 1;
-    }
-    else if(menuCurrent > 0){
-        menuPrevious = menuCurrent;
-        menuCurrent--;
-    }
-    menuSelect();
-}
-
-void Menu::menuDown() {
-    if (menuCurrent == menuPosCount - 1) {
-        menuPrevious = menuCurrent;
-        menuCurrent = 0;
-    }
-    else if(menuCurrent < menuPosCount - 1){
-        menuPrevious = menuCurrent;
-        menuCurrent++;
-    }
-    menuSelect();
+Menu::~Menu() {
+    keyThread.request_stop();
+    keyThread.join();
 }
 
 void Menu::hideMenu() {
@@ -96,35 +67,59 @@ void Menu::showMenu() {
     menuActive = true;
 }
 
-void Menu::toggleMenuPtr(unsigned short pos, bool ptr) {
-    if (ptr && menuPos[pos].first[0] != '>')
-        menuPos[pos].first = "> " + menuPos[pos].first;
+void Menu::menuDraw() {
+    if (menuActive) {
+#ifdef _WIN32
+        COORD pos = {0, 0};
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+#else
+        std::cout << "\033[2J\033[1;1H";
+#endif
 
-    else if(!ptr && menuPos[pos].first[0] == '>')
-    menuPos[pos].first.erase(0, 2);
+        std::cout << std::string(50, '-') << std::endl;
+        for (size_t i = 0; i < menuPosCount; i++) {
+            std::cout << std::setw(30) << menuPos[i].first << std::endl;
+        }
+        std::cout << std::string(50, '-') << std::endl;
+        std::cout << std::setw(0) << "CONTROLS: (arrow up/down) - move | (enter) - choose" << std::endl;
+        std::cout.flush();
+    }
 }
 
-void Menu::menuSelect() {
-    toggleMenuPtr(menuPrevious, false);
-    toggleMenuPtr(menuCurrent, true);
+void Menu::turnOnKeyDetect() {
+    keyDetectionEnabled = true;
 }
 
-Menu::Menu(const std::vector<std::pair<std::string, std::function<void()>>> & menuPos, unsigned short menuCurrent,
-           unsigned short menuLast) : menuPos(menuPos),menuCurrent(menuCurrent), menuPrevious(menuLast) {
-    menuPosCount = menuPos.size();
-    if (menuCurrent > menuPosCount)
-        throw std::invalid_argument("menuCurrent > menuPosCount");
+void Menu::turnOffKeyDetect() {
+    keyDetectionEnabled = false;
+}
 
-    if(menuCurrent < 0)
-        throw std::invalid_argument("menuCurrent < 0");
+void Menu::menuChoose() {
+    menuPos[menuCurrent].second();
+}
 
-    if(menuPrevious > menuPosCount)
-        throw std::invalid_argument("menuLast > menuPosCount");
+void Menu::menuUp() {
+    if (menuCurrent == 0) {
+        menuPrevious = menuCurrent;
+        menuCurrent = menuPosCount - 1;
+    } else if (menuCurrent > 0) {
+        menuPrevious = menuCurrent;
+        menuCurrent--;
+    }
     menuSelect();
-
-
-    keyThread = std::jthread{[&]() { detectKey(); }};
 }
+
+void Menu::menuDown() {
+    if (menuCurrent == menuPosCount - 1) {
+        menuPrevious = menuCurrent;
+        menuCurrent = 0;
+    } else if (menuCurrent < menuPosCount - 1) {
+        menuPrevious = menuCurrent;
+        menuCurrent++;
+    }
+    menuSelect();
+}
+
 void Menu::detectKey() {
     while (true) {
         //Do zrobienia wyłączanie wątku
@@ -146,19 +141,24 @@ void Menu::detectKey() {
     }
 }
 
-Menu::~Menu() {
-    keyThread.request_stop();
-    keyThread.join();
+void Menu::menuSelect() {
+    toggleMenuPtr(menuPrevious, false);
+    toggleMenuPtr(menuCurrent, true);
 }
 
-void Menu::menuChoose() {
-    menuPos[menuCurrent].second();
+void Menu::toggleMenuPtr(unsigned short pos, bool ptr) {
+    if (ptr && menuPos[pos].first[0] != '>')
+        menuPos[pos].first = "> " + menuPos[pos].first;
+
+    else if (!ptr && menuPos[pos].first[0] == '>')
+        menuPos[pos].first.erase(0, 2);
 }
 
-void Menu::turnOnKeyDetect() {
-   keyDetectionEnabled = true;
-}
 
-void Menu::turnOffKeyDetect() {
-    keyDetectionEnabled = false;
-}
+
+
+
+
+
+
+
