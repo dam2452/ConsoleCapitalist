@@ -10,7 +10,7 @@
 
 class ccCore {
 public:
-    explicit ccCore(long double money = 10, long double totalProfit = 0.0);
+    ccCore(long double money = 10, long double totalProfit = 0.0);
 
    ~ccCore();
    void drawWin();
@@ -25,13 +25,15 @@ public:
     void showGame();
     void backToMenu();
     void detectKey();
+    void showingMenu();
     void ccStart();
     void moneyUpdate();
     void saveProgress();
     void loadSave();
+    void drawSettings();
+    void hideCredits();
     void continueGame();
     void showSettings();
-
 private:
     std::string simplifyNumber(long double value);
     std::vector<business> bis;
@@ -44,7 +46,6 @@ private:
     std::atomic <int> key;
     bool keyDetectionEnabled = false;
     bool menuPage = false;
-
 };
 
 

@@ -6,8 +6,7 @@
 #include <iomanip>
 #include "Menu.h"
 #include <stdexcept>
-#include <conio.h>
-#include <windows.h>
+
 
 #include <condition_variable>
 #include <mutex>
@@ -15,8 +14,33 @@
 
 #ifdef _WIN32
 #define CLEAR "cls"
+#include <conio.h>
+#include <windows.h>
 #else
 #define CLEAR "clear"
+
+#include <termios.h>
+
+static char getch(){
+    struct termios old, current;
+
+    tcgetattr(0, &old);
+
+    current = old;
+
+    // disabling the buffer and the visibility of entered key
+    current.c_lflag &= ~ICANON;
+    current.c_lflag &= ~ECHO;
+
+    tcsetattr(0, TCSANOW, &current);
+
+    char ch;
+    std::cin.get(ch);
+
+    tcsetattr(0, TCSANOW, &old);
+
+    return ch;
+}
 #endif
 
 

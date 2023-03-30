@@ -8,21 +8,45 @@
 #include "Menu.h"
 #include "business.h"
 #include <iomanip>
-#include <conio.h>
-#include <math.h>
+#include <fstream>
+#include <math.h>1
 
 #ifdef _WIN32
-
+#include <conio.h>
 #include <windows.h>
 #include <fstream>
 
 #define CLEAR "cls"
 #else
 #include <unistd.h>
+#include <termios.h>
+
+static char getch(){
+    struct termios old, current;
+
+    tcgetattr(0, &old);
+
+    current = old;
+
+    // disabling the buffer and the visibility of entered key
+    current.c_lflag &= ~ICANON;
+    current.c_lflag &= ~ECHO;
+
+    tcsetattr(0, TCSANOW, &current);
+
+    char ch;
+    std::cin.get(ch);
+
+    tcsetattr(0, TCSANOW, &old);
+
+    return ch;
+}
+
 #define CLEAR "clear"
 #endif
 
 std::string ccCore::simplifyNumber(long double value) {
+    if(value==0) return "0";
     const char* units[] = {"", "k", "M", "B", "T", "Q"};
     int exponent = static_cast<int>(std::log10(value));
     int unitIndex = std::min(exponent / 3, 5);
@@ -31,7 +55,6 @@ std::string ccCore::simplifyNumber(long double value) {
     oss << std::fixed << std::setprecision(1) << shortValue << units[unitIndex];
     return oss.str();
 }
-
 
 void ccCore::drawIntro() {
     std::cout << " ________  ________  ________   ________  ________  ___       _______                         \n"
@@ -198,6 +221,8 @@ ccCore::ccCore(long double money, long double totalProfit) : menu({
     bisSetDefault();
     keyThread = std::jthread{[&]() { detectKey(); }};
     moneyThread = std::jthread{[&]() { moneyUpdate(); }};
+
+
 }
 
 void ccCore::backToMenu() {
@@ -388,6 +413,5 @@ void ccCore::drawWin() {
                "                                    ";
 
 }
-
 
 

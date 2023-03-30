@@ -14,8 +14,7 @@
 
 class Menu {
 public:
-    explicit Menu(const std::vector<std::pair<std::string, std::function<void()>>> &menuPos = {},
-                  unsigned short menuCurrent = 0,
+    explicit Menu(const std::vector<std::pair<std::string, std::function<void()>>>& menuPos = {}, unsigned short menuCurrent = 0,
                   unsigned short menuLast = 0);
 
     ~Menu();
@@ -23,11 +22,8 @@ public:
     void showMenu();
 
     void hideMenu();
-
     void turnOffKeyDetect();
-
     void turnOnKeyDetect();
-
     void menuChoose();
 
     void menuDraw();
@@ -38,13 +34,16 @@ public:
 
     void detectKey();
 
+
+
     void toggleMenuPtr(unsigned short pos, bool ptr);
 
 private:
     void menuSelect();
+    bool menuActive=true;
 
-    bool menuActive = true;
-
+    std::mutex mtx;
+    std::condition_variable cv;
     bool keyDetectionEnabled = true;
 
     unsigned short menuPosCount;
@@ -52,7 +51,7 @@ private:
     unsigned short menuCurrent;
     unsigned short menuPrevious;
     std::jthread keyThread;
-    std::atomic<int> key;
+    std::atomic <int> key;
 };
 
 
