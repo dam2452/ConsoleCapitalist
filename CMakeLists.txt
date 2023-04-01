@@ -3,4 +3,4 @@ project(CC2)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(CC2 main.cpp Menu.cpp Menu.hpp business.cpp business.hpp ccCore.cpp ccCore.hpp)
+add_executable(CC2 main.cpp Menu.cpp Menu.hpp Business.cpp Business.hpp CCcore.cpp CCcore.hpp)
