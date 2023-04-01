@@ -14,6 +14,7 @@
 #else
 #include <unistd.h>
 #include <termios.h>
+#define CLEAR "clear"
 
 static char getch(){
     struct termios old, current;
@@ -35,8 +36,6 @@ static char getch(){
 
     return ch;
 }
-
-#define CLEAR "clear"
 #endif
 
 

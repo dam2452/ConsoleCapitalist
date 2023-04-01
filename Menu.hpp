@@ -1,6 +1,4 @@
-#ifndef CC2_MENU_H
-#define CC2_MENU_H
-
+#pragma once
 #include <memory>
 #include <vector>
 #include <thread>
@@ -53,4 +51,3 @@ private:
     std::atomic<int> key;
 };
 
-#endif //CC2_MENU_H

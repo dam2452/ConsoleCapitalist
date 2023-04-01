@@ -1,5 +1,4 @@
-#ifndef CC2_CCCORE_H
-#define CC2_CCCORE_H
+#pragma once
 
 #include "business.hpp"
 #include "Menu.hpp"
@@ -68,5 +67,3 @@ private:
     bool keyDetectionEnabled = false;
     bool menuPage = false;
 };
-
-#endif //CC2_CCCORE_H

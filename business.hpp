@@ -1,7 +1,4 @@
-#ifndef CC2_BUSINESS_H
-#define CC2_BUSINESS_H
-
-
+#pragma once
 #include <string>
 
 class business {
@@ -35,6 +32,3 @@ private:
     long double profit;
     unsigned int count;
 };
-
-
-#endif //CC2_BUSINESS_H
