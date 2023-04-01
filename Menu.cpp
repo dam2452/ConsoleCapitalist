@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "Menu.hpp"
+#include "Menu.h"
 #include <stdexcept>
 
 #ifdef _WIN32

@@ -1,3 +1,3 @@
-D:/iCloudDrive/CLionProjects/CC2/cmake-build-debug/CMakeFiles/CC2.dir
-D:/iCloudDrive/CLionProjects/CC2/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/iCloudDrive/CLionProjects/CC2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/ClionProject/cmake-build-debug/CMakeFiles/CC2.dir
+D:/ClionProject/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/ClionProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir

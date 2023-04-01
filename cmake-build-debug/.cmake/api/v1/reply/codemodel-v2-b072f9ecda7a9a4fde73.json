@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/iCloudDrive/CLionProjects/CC2/cmake-build-debug",
-		"source" : "D:/iCloudDrive/CLionProjects/CC2"
+		"build" : "D:/ClionProject/cmake-build-debug",
+		"source" : "D:/ClionProject"
 	},
 	"version" : 
 	{
