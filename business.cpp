@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <utility>
-#include "business.h"
+#include "business.hpp"
 
 business::business(const std::string& name, double price, double profit, unsigned int count) : name(name),
                                                                                         price(price), profit(profit),

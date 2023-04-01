@@ -1,17 +1,16 @@
 #include <iostream>
-#include "ccCore.h"
-#include "Menu.h"
-#include "business.h"
+#include "ccCore.hpp"
+#include "Menu.hpp"
+#include "business.hpp"
 #include <iomanip>
 #include <fstream>
 #include <cmath>
 
 #ifdef _WIN32
-
 #include <conio.h>
 #include <windows.h>
-
 #define CLEAR "cls"
+
 #else
 #include <unistd.h>
 #include <termios.h>
@@ -39,6 +38,8 @@ static char getch(){
 
 #define CLEAR "clear"
 #endif
+
+
 
 ccCore::ccCore(long double money, long double totalProfit) : menu({
                                                                           {"Continue",      [this]() { continueGame(); }},
@@ -176,67 +177,11 @@ void ccCore::drawGame() {
                         (gameActive) ? backToMenu() : showGame();
                     }
                     break;
-                    //1 key
-                case 49:
-                    if (money >= bis[0].businessGetPrice()) {
-                        money -= bis[0].businessGetPrice();
-                        bis[0].businessBuy();
-                    }
-                    break;
-                    //2 key
-                case 50:
-                    if (money >= bis[1].businessGetPrice()) {
-                        money -= bis[1].businessGetPrice();
-                        bis[1].businessBuy();
-                    }
-                    break;
-                    //3 key
-                case 51:
-                    if (money >= bis[2].businessGetPrice()) {
-                        money -= bis[2].businessGetPrice();
-                        bis[2].businessBuy();
-                    }
-                    break;
-                    //4 key
-                case 52:
-                    if (money >= bis[3].businessGetPrice()) {
-                        money -= bis[3].businessGetPrice();
-                        bis[3].businessBuy();
-                    }
-                    break;
-                    //5 key
-                case 53:
-                    if (money >= bis[4].businessGetPrice()) {
-                        money -= bis[4].businessGetPrice();
-                        bis[4].businessBuy();
-                    }
-                    break;
-                    //6 key
-                case 54:
-                    if (money >= bis[5].businessGetPrice()) {
-                        money -= bis[5].businessGetPrice();
-                        bis[5].businessBuy();
-                    }
-                    break;
-                    //7 key
-                case 55:
-                    if (money >= bis[6].businessGetPrice()) {
-                        money -= bis[6].businessGetPrice();
-                        bis[6].businessBuy();
-                    }
-                    break;
-                    //8 key
-                case 56:
-                    if (money >= bis[7].businessGetPrice()) {
-                        money -= bis[7].businessGetPrice();
-                        bis[7].businessBuy();
-                    }
-                    break;
-                    //9 key
-                case 57:
-                    if (money >= bis[8].businessGetPrice()) {
-                        money -= bis[8].businessGetPrice();
-                        bis[8].businessBuy();
+                    //e key
+                case 101:
+                    if (money >= 300000000) {
+                        money -= 300000000;
+                        drawWin();
                     }
                     break;
                     //0 key
@@ -245,14 +190,17 @@ void ccCore::drawGame() {
                         money -= bis[9].businessGetPrice();
                         bis[9].businessBuy();
                     }
-                    break;
-                    //e key
-                case 101:
-                    if (money >= 300000000) {
-                        money -= 300000000;
-                        drawWin();
+                    //1,2,3..9 key
+                default:
+                    if (key >= 49 && key <= 58) {
+                        int index = key - 49;
+                        if (money >= bis[index].businessGetPrice()) {
+                            money -= bis[index].businessGetPrice();
+                            bis[index].businessBuy();
+                        }
                     }
                     break;
+
             }
         }
     }
@@ -316,8 +264,7 @@ void ccCore::bisSetDefault() {
 void ccCore::loadSave() {
     std::ifstream saveFile("saveCC.txt");
     if (!saveFile.is_open()) {
-        std::cerr << "Error opening save file!\n";
-        return;
+        throw std::runtime_error("Error opening save file!");
     }
     std::string tempStr;
     unsigned int tempDouble;
@@ -343,14 +290,13 @@ void ccCore::saveProgress() {
         saveFile << " ";
         saveFile << bi.businessGetCount();
         saveFile << " ";
-
     }
     saveFile.close();
 }
 
 std::string ccCore::simplifyNumber(long double value) {
     if (value == 0) return "0";
-    const char *units[] = {"", "k", "M", "B", "T", "Q"};
+    constexpr std::array<char, 6> units = {' ', 'k', 'M', 'B', 'T', 'Q'};
     int exponent = static_cast<int>(std::log10(value));
     int unitIndex = std::min(exponent / 3, 5);
     long double shortValue = value / std::pow(1000.0, unitIndex);

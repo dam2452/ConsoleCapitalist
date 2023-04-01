@@ -1,4 +1,4 @@
-#include "ccCore.h"
+#include "ccCore.hpp"
 
 int main() {
     ccCore game;
