@@ -1,3 +1,0 @@
-D:\ToolboxApp\apps\CLion\ch-0\222.4345.21\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\CC2.dir/objects.a
-D:\ToolboxApp\apps\CLion\ch-0\222.4345.21\bin\mingw\bin\ar.exe qc CMakeFiles\CC2.dir/objects.a @CMakeFiles\CC2.dir\objects1.rsp
-D:\ToolboxApp\apps\CLion\ch-0\222.4345.21\bin\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\CC2.dir/objects.a -Wl,--no-whole-archive -o CC2.exe -Wl,--out-implib,libCC2.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\CC2.dir\linklibs.rsp
